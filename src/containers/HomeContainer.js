@@ -1,12 +1,95 @@
-import React from 'react';
-import {View, Text} from 'react-native';
+import React, {useContext, useEffect} from 'react';
+import {
+  View,
+  ActivityIndicator,
+  StyleSheet,
+  Dimensions,
+  ScrollView,
+  SafeAreaView,
+} from 'react-native';
+import Carousel from 'react-native-snap-carousel';
+import {GradientBackground} from '../components/GradientBackground';
+import {HorizontalSlider} from '../components/HorizontalSlider';
+import {MovieCard} from '../components/MovieCard';
+import {useMovies} from '../hooks/useMovies';
+import {getImageColors} from '../helpers/getImageColors';
+import {GradientContext} from '../context/GradientContext';
 
 const HomeContainer = () => {
-  return (
-    <View>
-      <Text>HomeContainer</Text>
-    </View>
-  );
+  const {width: windowWidth, height: windowHeight} = Dimensions.get('window');
+  //const { width:windowWidth, height:windowHeight } = useWindowDimensions();
+  //const { top } = useSafeAreaInsets();
+
+  const {setRootColors} = useContext(GradientContext);
+
+  const {loading, nowPlaying, topRated, upComing} = useMovies();
+
+  const getCarouselColors = async index => {
+    const movie = nowPlaying[index];
+    const uriPath = `https://image.tmdb.org/t/p/w500${movie.poster_path}`;
+
+    const [primary = 'red', secondary = 'blue'] = await getImageColors(
+      movie.id,
+      uriPath,
+    );
+
+    //Now, send primary and secondary to context
+    setRootColors({primary, secondary});
+  };
+
+  //To apply context gradient color to first render movie[0]
+  useEffect(() => {
+    if (nowPlaying?.length > 0) {
+      getCarouselColors(0);
+    }
+  }, [nowPlaying]);
+
+  if (loading) {
+    return (
+      <View style={styles.activityContainer}>
+        <ActivityIndicator color="red" size={100} />
+      </View>
+    );
+  } else {
+    return (
+      <GradientBackground>
+        <SafeAreaView>
+          {/* Principal carousel */}
+          <View style={{...styles.carouselContainer, height: windowHeight / 2}}>
+            <Carousel
+              data={nowPlaying}
+              renderItem={({item}) => <MovieCard movie={item} />}
+              sliderWidth={windowWidth}
+              itemWidth={300}
+              onSnapToItem={index => getCarouselColors(index)}
+            />
+          </View>
+          {/* Flatlist carousel */}
+          <ScrollView
+            style={{...styles.flatlistContainer, height: windowHeight / 2}}
+            showsVerticalScrollIndicator={false}>
+            <HorizontalSlider title="Top rated" movies={topRated} />
+            <HorizontalSlider title="Upcoming" movies={upComing} />
+          </ScrollView>
+        </SafeAreaView>
+      </GradientBackground>
+    );
+  }
 };
+
+const styles = StyleSheet.create({
+  activityContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    backgroundColor: 'white',
+  },
+  carouselContainer: {
+    //backgroundColor: 'red',
+    paddingVertical: 20,
+  },
+  flatlistContainer: {
+    //backgroundColor: 'indigo'
+  },
+});
 
 export default HomeContainer;
