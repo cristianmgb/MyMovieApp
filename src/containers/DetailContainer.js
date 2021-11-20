@@ -8,7 +8,7 @@ import {
   ScrollView,
   SafeAreaView,
   ActivityIndicator,
-  TouchableOpacity
+  TouchableOpacity,
 } from 'react-native';
 // import Icon from 'react-native-vector-icons/Ionicons';
 import {MovieDetails} from '../components/MovieDetails';
