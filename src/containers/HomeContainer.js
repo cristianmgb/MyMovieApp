@@ -21,7 +21,6 @@ const {width: windowWidth, height: windowHeight} = Dimensions.get('window');
 const HomeContainer = ({navigation}) => {
   const {setRootColors} = useContext(GradientContext);
   const {loading, nowPlaying, topRated, upComing} = useMovies();
-  console.log('home', nowPlaying);
 
   const getCarouselColor = async index => {
     const movie = nowPlaying[index];

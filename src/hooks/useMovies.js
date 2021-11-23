@@ -19,13 +19,12 @@ export const useMovies = () => {
       topRatedPromise,
       upComingPromise,
     ]);
-    
+
     setMovies({
       nowPlaying: response[0].results,
       topRated: response[1].results,
       upComing: response[2].results,
     });
-    console.log(movies);
     setLoading(false);
   };
 

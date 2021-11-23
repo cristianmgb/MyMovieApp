@@ -1,10 +1,14 @@
-import React, {useState} from 'react';
+import React, {useState, useContext} from 'react';
 import {Alert} from 'react-native';
 import Register from '../components/Register';
 import Api, {SIGNUP} from '../api/api';
 import {storeData, KEY_DATA_REGISTER} from '../utils/util';
+import {GradientContext} from '../context/GradientContext';
 
 const RegisterContainer = ({navigation}) => {
+  const {
+    authContext: {signUp},
+  } = useContext(GradientContext);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [passwordConfirm, setPasswordConfirm] = useState('');
@@ -53,7 +57,8 @@ const RegisterContainer = ({navigation}) => {
           console.log('res', res);
           storeData(KEY_DATA_REGISTER, res.data);
           setIsLoading(false);
-          navigation.navigate('Home');
+          await signUp(res.data);
+          // navigation.push('Home');
         } else {
           setIsLoading(false);
           Alert.alert('Error', res.message);

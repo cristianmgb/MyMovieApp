@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
 import Login from '../containers/LoginContainer';
@@ -9,23 +9,22 @@ import MovieDetails from '../containers/MovieDetailsContainer';
 import Profile from '../containers/ProfileContainer';
 
 import {getData, KEY_DATA_REGISTER} from '../utils/util';
+import {GradientContext} from '../context/GradientContext';
 
 const Stack = createNativeStackNavigator();
 
 export const StackNavigator = () => {
   const [showSplash, setShowSplash] = useState(true);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  const {authContext, state} = useContext(GradientContext);
+  const {signIn} = authContext;
 
   const checkLogin = () => {
     setTimeout(async () => {
       const data = await getData(KEY_DATA_REGISTER);
-      console.log('data', data);
       if (data) {
-        setIsLoggedIn(true);
         setShowSplash(false);
-      } else {
-        setIsLoggedIn(false);
-        setShowSplash(false);
+        await signIn(data);
       }
     }, 1500);
   };
@@ -43,7 +42,7 @@ export const StackNavigator = () => {
       screenOptions={{
         headerShown: false,
       }}>
-      {isLoggedIn ? (
+      {state.userToken ? (
         <>
           <Stack.Screen name="Home" component={Home} />
           <Stack.Screen name="MovieDetails" component={MovieDetails} />
