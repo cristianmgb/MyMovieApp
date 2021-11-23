@@ -6,6 +6,7 @@ import {
   StyleSheet,
   TextInput,
   ScrollView,
+  ActivityIndicator,
 } from 'react-native';
 import Boton from '../components/Boton';
 
@@ -22,26 +23,53 @@ const Register = props => {
         </View>
         <View>
           <View style={styles.input}>
-            <TextInput placeholder="Nombres" />
+            <TextInput
+              placeholder="Nombres"
+              autoCapitalize="words"
+              value={props.name}
+              onChangeText={text => props.changeNombre(text)}
+            />
           </View>
           <View style={styles.input}>
-            <TextInput placeholder="Email" keyboardType="email-address" />
+            <TextInput
+              placeholder="Email"
+              keyboardType="email-address"
+              textContentType="emailAddress"
+              autoCapitalize="none"
+              value={props.email}
+              onChangeText={text => props.changeEmail(text)}
+            />
           </View>
           <View style={styles.input}>
-            <TextInput placeholder="Celular" keyboardType="phone-pad" />
+            <TextInput
+              placeholder="Celular"
+              keyboardType="phone-pad"
+              value={props.celular}
+              onChangeText={text => props.changeCelular(text)}
+            />
           </View>
           <View style={styles.input}>
-            <TextInput placeholder="Constraseña" secureTextEntry={true} />
+            <TextInput
+              placeholder="Constraseña"
+              secureTextEntry={true}
+              value={props.password}
+              onChangeText={text => props.changePassword(text)}
+            />
           </View>
           <View style={styles.input}>
             <TextInput
               placeholder="Confirma Contraseña"
               secureTextEntry={true}
+              value={props.passwordConfirm}
+              onChangeText={text => props.changePasswordConfirm(text)}
             />
           </View>
         </View>
         <View>
-          <Boton title="registrarse" />
+          {props.isLoading ? (
+            <ActivityIndicator color="red" size={100} />
+          ) : null}
+          <Boton title="registrarse" action={props.register} />
         </View>
         <View style={styles.contentHasAccount}>
           <Text style={styles.hasAccount}>

@@ -1,14 +1,18 @@
 import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {StackNavigator} from './src/routes/Navigations';
-import {SafeAreaView, Text, View} from 'react-native';
-// import Register from './src/containers/RegisterContainer';
-// import Login from './src/containers/LoginContainer';
+import {GradientProvider} from './src/context/GradientContext';
+
+const AppState = ({children}) => {
+  return <GradientProvider>{children}</GradientProvider>;
+};
 
 const App = () => {
   return (
     <NavigationContainer>
-      <StackNavigator />
+      <AppState>
+        <StackNavigator />
+      </AppState>
     </NavigationContainer>
   );
 };

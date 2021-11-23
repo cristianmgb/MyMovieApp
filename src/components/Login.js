@@ -13,6 +13,8 @@ const Login = props => {
         <View style={styles.input}>
           <TextInput
             placeholder="Email"
+            textContentType="emailAddress"
+            autoCapitalize="none"
             onChangeText={value => props.changeEmail(value)}
             value={props.email}
           />
