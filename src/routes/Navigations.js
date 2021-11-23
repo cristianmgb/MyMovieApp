@@ -26,6 +26,7 @@ export const StackNavigator = () => {
         setShowSplash(false);
         await signIn(data);
       }
+      setShowSplash(false);
     }, 1500);
   };
 
